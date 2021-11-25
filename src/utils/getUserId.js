@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 
-
 const jwtSecret = 'somesecret';
 
 const getUserId = (req) => {
