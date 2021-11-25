@@ -1,0 +1,109 @@
+type Query {
+  user(id: ID!): User!
+  users: [User!]!
+  product(id: ID!): Product!
+  products: [Product!]!
+}
+
+# for file upload purpose
+scalar Upload
+type File {
+  filename: String!
+  filelocation: String!
+  mimetype: String!
+  encoding: String!
+}
+# 
+
+type Mutation{
+  createUser(data: CreateUserInput!): AuthPayload!
+  loginUser(data: LoginUserInput!): AuthPayload!
+  loginUserByToken: User!
+  updateUser(data: UpdateUserInput): User!
+  deleteUser: User!
+  deleteUserById(id: ID!): User!
+  createProduct(data: CreateProductInput!): Product!
+  updateProduct(data: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Product!
+  singleUpload(file: Upload!): File!
+}
+
+type AuthPayload{
+  token: String!
+  user: User!
+}
+
+type User{
+  id: ID!
+  deviceToken: String!
+  username: String!
+  email: String!
+  phoneNumber: String!
+  password: String!
+  profile_image: String!
+  dateJoined: String!
+  products: [Product!]!
+}
+
+type Product{
+  id: ID!
+  isPending: String!
+  views: Int!
+  name: String!
+  price: String!
+  description: String!
+  category: String!
+  image: String!
+  datePosted: String!
+  posterId: String!
+  poster: User!
+}
+
+input CreateUserInput{
+  deviceToken: String!
+  username: String!
+  email: String!
+  phoneNumber: String!
+  password: String!
+  profile_image: String!
+  dateJoined: String!
+}
+
+input UpdateUserInput{
+  deviceToken: String
+  username: String
+  email: String
+  phoneNumber: String
+  password: String
+  profile_image: String
+  dateJoined: String
+}
+
+input LoginUserInput{
+  email: String!
+  password: String!
+}
+
+input CreateProductInput{
+  isPending: String!
+  views: Int!
+  name: String!
+  price: String!
+  description: String!
+  category: String!
+  image: String!
+  datePosted: String!
+}
+
+input UpdateProductInput{
+  id: ID!
+  isPending: String
+  views: Int
+  name: String
+  price: String
+  description: String
+  category: String
+  image: String
+  datePosted: String
+}
+

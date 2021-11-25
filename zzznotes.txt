@@ -1,0 +1,49 @@
+{
+  "name": "mine_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "prismagen": "npx prisma generate",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "prisma": "^3.5.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.5.0",
+    "bcrypt": "^5.0.1",
+    "graphql-yoga": "^1.18.3",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
+
+
+{
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "shopri",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "rentochcom_david",
+    "password": "y]~eHw@E*b$%",
+    "database": "rentochcom_shopri",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
