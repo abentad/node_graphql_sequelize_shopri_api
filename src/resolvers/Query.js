@@ -1,3 +1,4 @@
+
 const Query = {
     async user(parent, { id }, { db }, info){
         const [user] = await db.users.findAll({ where: { id } });
@@ -13,10 +14,11 @@ const Query = {
         if(!product) throw new Error('Product not found');
         return product;
     },
-    async products(parent, { page, take}, { db }, info){
-        //TODO: Paginate
-        const products = await db.products.findAll();
-        return products;
+    async products(parent, { page, limit}, { db }, info){
+        if(page <= 0 || limit > 15) throw new Error('Invalid request');
+        const { count, rows } = await db.products.findAndCountAll({ offset: (page - 1) * limit, limit: limit });
+        const pages = Math.ceil(count / limit);
+        return { count, products: rows, pages};
     },
 }
 

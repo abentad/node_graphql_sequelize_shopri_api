@@ -2,7 +2,7 @@ type Query {
   user(id: ID!): User!
   users: [User!]!
   product(id: ID!): Product!
-  products: [Product!]!
+  products(page: Int!, limit: Int!): PaginatedProduct!
 }
 
 # for file upload purpose
@@ -58,6 +58,12 @@ type Product{
   datePosted: String!
   posterId: String!
   poster: User!
+}
+
+type PaginatedProduct{
+  count: Int!
+  pages: Int!
+  products: [Product!]!
 }
 
 input CreateUserInput{
