@@ -24,6 +24,7 @@ type Mutation{
   deleteUserById(id: ID!): User!
   createProduct(data: CreateProductInput!): Product!
   updateProduct(data: UpdateProductInput!): Product!
+  updateProductView(id: ID!): Product!
   deleteProduct(id: ID!): Product!
   singleUpload(file: Upload!): File!
 }

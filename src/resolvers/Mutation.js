@@ -67,6 +67,15 @@ const Mutation = {
         const [updatedProduct] = await db.products.findAll({ where: { id: data.id }});
         return updatedProduct;
     },
+    async updateProductView(parent, { id }, { db, req }, info){
+        const userId = getUserId(req);
+        const [originalProduct] = await db.products.findAll({ where: { id } });
+        if(!originalProduct) throw new Error('Product not found');
+        const newView = originalProduct.views + 1;
+        await db.products.update({views: newView}, { where: { id }});
+        const [updatedProduct] = await db.products.findAll({ where: { id } });
+        return updatedProduct;
+    },
     async deleteProduct(parent, args, { db, req}, info){
         const userId = getUserId(req);
         const [product] = await db.products.findAll({ where: { id: args.id }});
