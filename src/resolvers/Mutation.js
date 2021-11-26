@@ -11,11 +11,11 @@ const jwtSecret = 'somesecret';
 
 const Mutation = {
     async createUser(parent, { data, file }, { db }, info){
-        const {filelocation, isUploaded } = await uploadProfileImage(file);
+        const { newFileName, isUploaded } = await uploadProfileImage(file);
         if(!isUploaded) throw new Error('Invalid image format');
         if(data.password.length < 8) throw new Error('Password length must be at least 8');
         data.password = await hashPassword(data.password);
-        const user = await db.users.create({ ...data, profile_image: filelocation });
+        const user = await db.users.create({ ...data, profile_image: newFileName });
         if(!user) throw new Error('Failed Signing up user');
         const token = jwt.sign({ id: user.id }, jwtSecret);
         return { user, token };    

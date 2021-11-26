@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     profile_image: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING(80),
       allowNull: true
     },
     dateJoined: {

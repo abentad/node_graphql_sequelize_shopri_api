@@ -4,14 +4,14 @@ const { v4: uuidv4 } = require('uuid');
 
 const uploadProfileImage = async (file) => {
     let isUploaded = true;
-    let filelocation = "";
+    let newFileName = "";
     const re = /(?:\.([^.]+))?$/;
     const { createReadStream, filename, mimetype, encoding } = await file;
     if(mimetype.startsWith('image/')){
         const ext = re.exec(filename)[1]; 
         const stream = createReadStream();
-        const newFileName = uuidv4() + `.${ext}`;
-        filelocation = path.join(__dirname, `/../images/profile/${newFileName}`);
+        newFileName = uuidv4() + `.${ext}`;
+        const filelocation = path.join(__dirname, `../images/profile/${newFileName}`);
         await new Promise((resolve, reject) => {
             const writeStream = createWriteStream(filelocation);
             writeStream.on('finish', resolve);
@@ -22,12 +22,13 @@ const uploadProfileImage = async (file) => {
     }else{
         isUploaded = false;
     } 
-    return { filelocation , isUploaded };
+    return { newFileName , isUploaded };
 }
 
-const removeProfileImage = (filePath) => {
+const removeProfileImage = (fileName) => {
     let isRemoved = true;
-    unlink(filePath, (error)=> {
+    const filepath = path.join(__dirname, `../images/profile/${fileName}`);
+    unlink(filepath, (error)=> {
         if(error) isRemoved = false;
     });
     return isRemoved;
