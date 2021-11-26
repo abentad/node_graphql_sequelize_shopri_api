@@ -26,7 +26,6 @@ type Mutation{
   updateProduct(data: UpdateProductInput!): Product!
   updateProductView(id: ID!): Product!
   deleteProduct(id: ID!): Product!
-  singleUpload(file: Upload!): File!
 }
 
 type AuthPayload{
@@ -72,7 +71,6 @@ input CreateUserInput{
   email: String!
   phoneNumber: String!
   password: String!
-  profile_image: String!
   dateJoined: String!
 }
 

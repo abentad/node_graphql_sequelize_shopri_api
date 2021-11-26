@@ -1,17 +1,21 @@
-const { createWriteStream, unlink } = require('fs');
-const path = require('path');
 const jwt = require('jsonwebtoken');
 const getUserId = require('../utils/getUserId');
 const { hashPassword, comparePassword } = require('../utils/hashPassword');
+const { uploadProfileImage, removeProfileImage } = require('../utils/fileUpload');
+
 
 
 const jwtSecret = 'somesecret';
 
+
+
 const Mutation = {
-    async createUser(parent, { data }, { db }, info){
+    async createUser(parent, { data, file }, { db }, info){
+        const {filelocation, isUploaded } = await uploadProfileImage(file);
+        if(!isUploaded) throw new Error('Invalid image format');
         if(data.password.length < 8) throw new Error('Password length must be at least 8');
         data.password = await hashPassword(data.password);
-        const user = await db.users.create(data);
+        const user = await db.users.create({ ...data, profile_image: filelocation });
         if(!user) throw new Error('Failed Signing up user');
         const token = jwt.sign({ id: user.id }, jwtSecret);
         return { user, token };    
@@ -41,6 +45,8 @@ const Mutation = {
         const userId = getUserId(req);
         const [user] = await db.users.findAll({ where: { id: userId }});
         if(!user) throw new Error('User not found');
+        const profileRemoved = removeProfileImage(user.profile_image);
+        if(!profileRemoved) throw new Error('Failed removing user');
         await db.users.destroy({ where: { id: userId }});
         return user;
     },
@@ -48,6 +54,8 @@ const Mutation = {
     async deleteUserById(parent, args, { db, req }, info){
         const [user] = await db.users.findAll({ where: { id: args.id }});
         if(!user) throw new Error('User not found');
+        const profileRemoved = removeProfileImage(user.profile_image);
+        if(!profileRemoved) throw new Error('Failed removing user');
         await db.users.destroy({ where: { id: args.id }});
         return user;
     },
@@ -83,24 +91,7 @@ const Mutation = {
         if(product.posterId !== userId) throw new Error('User not authorized to delete post');
         await db.products.destroy({ where: { id: args.id }});
         return product;
-    },
-    singleUpload: async (parent, { file }) => {
-        const { createReadStream, filename, mimetype, encoding } = await file;  
-        const stream = createReadStream();
-        const filelocation = path.join(__dirname, `/../images/${filename}`);
-        await new Promise((resolve, reject) => {
-            const writeStream = createWriteStream(filelocation);
-            writeStream.on('finish', resolve);
-            writeStream.on('error', (error) => {
-              unlink(filelocation, () => {
-                reject(error);
-              });
-            });
-            stream.on('error', (error) => writeStream.destroy(error));
-            stream.pipe(writeStream);
-        });  
-        return { filename, mimetype, encoding, filelocation };
-    },
+    }
 };
 
 module.exports = Mutation;
