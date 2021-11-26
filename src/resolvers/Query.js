@@ -16,7 +16,7 @@ const Query = {
     },
     async products(parent, { page, limit}, { db }, info){
         if(page <= 0 || limit > 15) throw new Error('Invalid request');
-        const { count, rows } = await db.products.findAndCountAll({ offset: (page - 1) * limit, limit: limit });
+        const { count, rows } = await db.products.findAndCountAll({ offset: (page - 1) * limit, limit: limit, order: [ ['id', 'DESC'] ] });
         const pages = Math.ceil(count / limit);
         return { count, products: rows, pages};
     },
