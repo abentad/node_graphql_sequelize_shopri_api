@@ -19,7 +19,7 @@ type Mutation{
   createUser(data: CreateUserInput!, file: Upload!): AuthPayload!
   loginUser(data: LoginUserInput!): AuthPayload!
   loginUserByToken: User!
-  updateUser(data: UpdateUserInput): User!
+  updateUser(data: UpdateUserInput, file: Upload): User!
   deleteUser: User!
   deleteUserById(id: ID!): User!
   createProduct(data: CreateProductInput!): Product!
@@ -80,7 +80,6 @@ input UpdateUserInput{
   email: String
   phoneNumber: String
   password: String
-  profile_image: String
   dateJoined: String
 }
 

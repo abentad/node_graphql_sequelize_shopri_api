@@ -34,10 +34,23 @@ const Mutation = {
         if(!user) throw new Error('User not found');
         return user;
     },
-    async updateUser(parent, { data }, { db, req }, info){
+    async updateUser(parent, { data, file }, { db, req }, info){
         const userId = getUserId(req);
+        let fileName = "";
+        const [originalUser] = await db.users.findAll({ where: { id: userId }});
+        if(file) {
+            const { newFileName, isUploaded } = await uploadProfileImage(file);
+            if(!isUploaded) throw new Error('Invalid image format');
+            const profileRemoved = removeProfileImage(originalUser.profile_image);
+            if(!profileRemoved) throw new Error('Failed updating user');
+            fileName = newFileName;
+        }
         if(data.password) data.password = await hashPassword(data.password);
-        await db.users.update(data, { where: { id: userId }});
+        if(fileName !== "") {
+            await db.users.update({ ...data, profile_image: fileName }, { where: { id: userId }});
+        }else{
+            await db.users.update(data, { where: { id: userId }});
+        }
         const [user] = await db.users.findAll({ where: { id: userId }});
         return user;
     },

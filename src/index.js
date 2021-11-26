@@ -24,3 +24,5 @@ server.start(() => console.log('Server is running on http://localhost:4000'));
 // });
 
 
+// {"query":"mutation ($file: Upload!) {\n  updateUser(data: {\n    username: \"Nathan\"\n  }, file: $file){\n    id\n    username\n    profile_image\n  }\n}", "variables": { "file": null } }
+// {"query":"mutation ($file: Upload!) {\n  createUser(data: {\n    deviceToken: \"\",\n    username: \"Nathan\",\n    email: \"nathan@gmail.com\",\n    phoneNumber: \"934171620\",\n    password: \"12345678\",\n    dateJoined: \"2022/12/11\"    \n  }, file: $file){\n    token\n    user{\n      id\n      username\n      email\n      profile_image\n    }\n  }\n}", "variables": { "file": null } }
