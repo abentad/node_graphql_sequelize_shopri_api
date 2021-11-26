@@ -16,14 +16,8 @@ const server = new GraphQLServer({
     context(req){ return { req, db }; } 
 });
 
-// server.express.use('/uploads/profile', server.express.static(path.join(__dirname, `/images/profile/`)));
-server.express.use(express.static("images/profile"));
-// server.express.get('/profile/*', (req, res, next) => {
-//     // here you can use your way to get the path dir ..  
-//     const pathDir = path.join(__dirname, `./images/profile`);
-//     console.log(pathDir);
-//     res.sendFile(pathDir);
-// });
+server.express.use('/profile', express.static(path.join(__dirname, `images/profile/`)));
+
 
 // db.sequelize.sync().then(()=> {
 server.start(() => console.log('Server is running on http://localhost:4000'));
