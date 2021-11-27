@@ -72,6 +72,7 @@ const Mutation = {
         await db.users.destroy({ where: { id: args.id }});
         return user;
     },
+    //TODO: upload multiple files and store those strings inside the images database
     async createProduct(parent, { data }, { db, req }, info){
         const userId = getUserId(req);
         const product = await db.products.create({ ...data, posterId: userId});
