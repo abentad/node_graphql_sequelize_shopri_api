@@ -57,6 +57,13 @@ type Product{
   datePosted: String!
   posterId: String!
   poster: User!
+  images: [Image!]!
+}
+
+type Image{
+  image_id: ID!
+  id: ID!
+  url: String!
 }
 
 type PaginatedProduct{
