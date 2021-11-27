@@ -26,42 +26,43 @@ const uploadProfileImage = async (file) => {
 }
 
 const uploadProductImages = async (files) => {
-    console.log("files ", files);
-    let isUploaded = true;
+    let uploaded = true;
+    let areImageFiles = true;
     let uploadedFileNames = [];
     for(var i = 0; i < files.length; i++){
-        const { newFileName, isUploaded } = await productImageUpload(files[i]);
-        if(!isUploaded) {
-            isUploaded = false;
-            break;
-        }
-        uploadedFileNames.push(newFileName);
+        const { mimetype } = await files[i];
+        if(!mimetype.startsWith('image/')){
+            areImageFiles = false;
+        }    
     }
-    return { uploadedFileNames , isUploaded };
+    if(areImageFiles){
+        for(var i = 0; i < files.length; i++){
+            const { newFileName } = await productImageUpload(files[i]);
+            uploadedFileNames.push(newFileName);
+        }
+    }else{
+        uploaded = false;
+    }
+    return { uploadedFileNames , isUploaded: uploaded };
 }
 
 
 const productImageUpload = async (file) => {
-    let isUploaded = true;
     let newFileName = "";
     const re = /(?:\.([^.]+))?$/;
     const { createReadStream, filename, mimetype, encoding } = await file;
-    if(mimetype.startsWith('image/')){
-        const ext = re.exec(filename)[1]; 
-        const stream = createReadStream();
-        newFileName = uuidv4() + `.${ext}`;
-        const filelocation = path.join(__dirname, `../images/products/${newFileName}`);
-        await new Promise((resolve, reject) => {
-            const writeStream = createWriteStream(filelocation);
-            writeStream.on('finish', resolve);
-            writeStream.on('error', (error) => { unlink(filelocation, () => { reject(error); }); });
-            stream.on('error', (error) => writeStream.destroy(error));
-            stream.pipe(writeStream);
-        });
-    }else{
-        isUploaded = false;
-    } 
-    return { newFileName , isUploaded };
+    const ext = re.exec(filename)[1]; 
+    const stream = createReadStream();
+    newFileName = uuidv4() + `.${ext}`;
+    const filelocation = path.join(__dirname, `../images/products/${newFileName}`);
+    await new Promise((resolve, reject) => {
+        const writeStream = createWriteStream(filelocation);
+        writeStream.on('finish', resolve);
+        writeStream.on('error', (error) => { unlink(filelocation, () => { reject(error); }); });
+        stream.on('error', (error) => writeStream.destroy(error));
+        stream.pipe(writeStream);
+    });
+    return { newFileName };
 }
 
 

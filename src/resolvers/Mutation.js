@@ -27,11 +27,8 @@ const Mutation = {
         const product = await db.products.create({ ...data, image: uploadedFileNames[0], posterId: userId});
         //TODO: loop through the uploade filenames and add them to the images table in database
         // images.bulkCreate([{ /*  record one */ }, { /* record two */ }.. ])
-        console.log("uploadedFileNames ", uploadedFileNames);
         const listOfImageObjects =  uploadedFileNames.map((fileName)=> { return { id: Number(product.id), url: fileName } });
         const images = await db.images.bulkCreate(listOfImageObjects);
-        console.log("list of images object ", listOfImageObjects);
-        // console.log("images ", images);
         if(!product) throw new Error('Failed posting product');
         return product;
     },
