@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const getUserId = require('../utils/getUserId');
 const { hashPassword, comparePassword } = require('../utils/hashPassword');
-const { uploadProfileImage, removeProfileImage } = require('../utils/fileUpload');
+const { uploadProfileImage, uploadProductImages, removeProfileImage } = require('../utils/fileUpload');
 
 
 
@@ -19,6 +19,21 @@ const Mutation = {
         if(!user) throw new Error('Failed Signing up user');
         const token = jwt.sign({ id: user.id }, jwtSecret);
         return { user, token };    
+    },
+    async createProduct(parent, { data, files }, { db, req }, info){
+        const userId = getUserId(req);
+        const { uploadedFileNames , isUploaded } = await uploadProductImages(files);
+        if(!isUploaded) throw new Error('Invalid image format');        
+        const product = await db.products.create({ ...data, image: uploadedFileNames[0], posterId: userId});
+        //TODO: loop through the uploade filenames and add them to the images table in database
+        // images.bulkCreate([{ /*  record one */ }, { /* record two */ }.. ])
+        console.log("uploadedFileNames ", uploadedFileNames);
+        const listOfImageObjects =  uploadedFileNames.map((fileName)=> { return { id: Number(product.id), url: fileName } });
+        const images = await db.images.bulkCreate(listOfImageObjects);
+        console.log("list of images object ", listOfImageObjects);
+        // console.log("images ", images);
+        if(!product) throw new Error('Failed posting product');
+        return product;
     },
     async loginUser(parent, { data }, { db }, info){
         const [user] = await db.users.findAll({ where: { email: data.email } });
@@ -73,12 +88,7 @@ const Mutation = {
         return user;
     },
     //TODO: upload multiple files and store those strings inside the images database
-    async createProduct(parent, { data }, { db, req }, info){
-        const userId = getUserId(req);
-        const product = await db.products.create({ ...data, posterId: userId});
-        if(!product) throw new Error('Failed posting product');
-        return product;
-    },
+
     async updateProduct(parent, { data }, { db, req }, info){
         const userId = getUserId(req);
         const [originalProduct] = await db.products.findAll({ where: { id: data.id }});

@@ -22,7 +22,7 @@ type Mutation{
   updateUser(data: UpdateUserInput, file: Upload): User!
   deleteUser: User!
   deleteUserById(id: ID!): User!
-  createProduct(data: CreateProductInput!): Product!
+  createProduct(data: CreateProductInput!, files: [Upload!]!): Product!
   updateProduct(data: UpdateProductInput!): Product!
   updateProductView(id: ID!): Product!
   deleteProduct(id: ID!): Product!
@@ -95,7 +95,6 @@ input CreateProductInput{
   price: String!
   description: String!
   category: String!
-  image: String!
   datePosted: String!
 }
 
