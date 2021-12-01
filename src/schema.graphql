@@ -1,5 +1,6 @@
 type Query {
   user(id: ID!): User!
+  userByPhone(phoneNumber: String): AuthPayload!
   users: [User!]!
   product(id: ID!): Product!
   products(page: Int!, limit: Int!): PaginatedProduct!
@@ -77,7 +78,7 @@ input CreateUserInput{
   username: String!
   email: String!
   phoneNumber: String!
-  password: String!
+  # password: String!
   dateJoined: String!
 }
 

@@ -1,9 +1,18 @@
+const jwt = require('jsonwebtoken');
+const jwtSecret = 'somesecret';
+
 
 const Query = {
     async user(parent, { id }, { db }, info){
         const [user] = await db.users.findAll({ where: { id } });
         if(!user) throw new Error('User not found');
         return user;
+    },
+    async userByPhone(parent, { phoneNumber }, { db }, info){
+        const [user] = await db.users.findAll({ where: { phoneNumber }});
+        if(!user) throw new Error('User not found');
+        const token = jwt.sign({ id: user.id }, jwtSecret);
+        return { user, token };
     },
     async users(parent, args, { db }, info){
         const users = await db.users.findAll();
