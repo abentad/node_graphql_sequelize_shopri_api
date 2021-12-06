@@ -59,6 +59,9 @@ type Product{
   posterId: String!
   poster: User!
   images: [Image!]!
+  height: Int!
+  width: Int!
+  blurHash: String!
 }
 
 type Image{
@@ -78,7 +81,6 @@ input CreateUserInput{
   username: String!
   email: String!
   phoneNumber: String!
-  # password: String!
   dateJoined: String!
 }
 
@@ -104,6 +106,9 @@ input CreateProductInput{
   description: String!
   category: String!
   datePosted: String!
+  height: Int!
+  width: Int!
+  blurHash: String!
 }
 
 input UpdateProductInput{

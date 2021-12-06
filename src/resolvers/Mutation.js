@@ -25,10 +25,9 @@ const Mutation = {
         const { uploadedFileNames , isUploaded } = await uploadProductImages(files);
         if(!isUploaded) throw new Error('Invalid image format');        
         const product = await db.products.create({ ...data, image: uploadedFileNames[0], posterId: userId});
-        //TODO: loop through the uploade filenames and add them to the images table in database
-        // images.bulkCreate([{ /*  record one */ }, { /* record two */ }.. ])
+        //* images.bulkCreate([{ /*  record one */ }, { /* record two */ }.. ])
         const listOfImageObjects =  uploadedFileNames.map((fileName)=> { return { id: Number(product.id), url: fileName } });
-        const images = await db.images.bulkCreate(listOfImageObjects);
+        await db.images.bulkCreate(listOfImageObjects);
         if(!product) throw new Error('Failed posting product');
         return product;
     },

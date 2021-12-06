@@ -35,6 +35,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(80),
       allowNull: true
     },
+    height: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    width: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    blurHash: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
     datePosted: {
       type: DataTypes.STRING(80),
       allowNull: true

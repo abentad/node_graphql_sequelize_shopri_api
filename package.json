@@ -12,10 +12,12 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.15",
+    "sequelize-auto": "^0.8.6",
     "sequelize-cli": "^6.3.0"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "blurhash": "^1.1.4",
     "express": "^4.17.1",
     "graphql-yoga": "^1.18.3",
     "jsonwebtoken": "^8.5.1",

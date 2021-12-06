@@ -1,6 +1,7 @@
 const path = require('path');
 const { createWriteStream, unlink } = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const { encode } = require('blurhash');
 
 const uploadProfileImage = async (file) => {
     let isUploaded = true;
@@ -29,15 +30,21 @@ const uploadProductImages = async (files) => {
     let uploaded = true;
     let areImageFiles = true;
     let uploadedFileNames = [];
+    //* for checking if the uploaded files are images
     for(var i = 0; i < files.length; i++){
         const { mimetype } = await files[i];
         if(!mimetype.startsWith('image/')){
             areImageFiles = false;
         }    
     }
+    //
     if(areImageFiles){
         for(var i = 0; i < files.length; i++){
             const { newFileName } = await productImageUpload(files[i]);
+            // if(i === 0){
+                // ! for the first image create a blurhash
+               
+            // }
             uploadedFileNames.push(newFileName);
         }
     }else{
@@ -45,6 +52,28 @@ const uploadProductImages = async (files) => {
     }
     return { uploadedFileNames , isUploaded: uploaded };
 }
+
+// const loadImage = async src => new Promise((resolve, reject) => {
+//     const img = new Image();
+//     img.onload = () => resolve(img);
+//     img.onerror = (...args) => reject(args);
+//     img.src = src;
+// });
+
+// const getImageData = image => {
+//   const canvas = document.createElement("canvas");
+//   canvas.width = image.width;
+//   canvas.height = image.height;
+//   const context = canvas.getContext("2d");
+//   context.drawImage(image, 0, 0);
+//   return context.getImageData(0, 0, image.width, image.height);
+// };
+
+// const encodeImageToBlurhash = async imageUrl => {
+//   const image = await loadImage(imageUrl);
+//   const imageData = getImageData(image);
+//   return encode(imageData.data, imageData.width, imageData.height, 4, 4);
+// };
 
 
 const productImageUpload = async (file) => {
